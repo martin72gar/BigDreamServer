@@ -49,14 +49,21 @@ app.get('/messages', function (req, res) {
 // Get the list of destinations, convert it to JSON and send it back to client 
 app.get('/destination', function (req, res) {
     var count = req.query.count != undefined ? req.query.count : req.query.count = 100;
-    if(req.query.country){
-        var countrySpots = destinations.filter(function(destination) {
-            return destination.country == req.query.country
-        });
-        res.end(JSON.stringify(countrySpots.slice(0, count)));
+
+    try {
+        if(req.query.country){
+            var countrySpots = destinations.filter(function(destination) {
+                return destination.country == req.query.country
+            });
+            res.send(JSON.stringify(countrySpots.slice(0, count)));
+        }
+        
+        res.send(JSON.stringify(destinations.slice(0, count)));
+    } catch(error) {
+        message.innerHTML = "Input is " + error;
+        console.error(error);
     }
     
-    res.end(JSON.stringify(destinations.slice(0, count)));
 })
 
 // Get one particular Destination using ID 
